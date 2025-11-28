@@ -68,7 +68,6 @@ const Index = () => {
       handleSendMessage();
     }
   };
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
 
   const tabs = [
     { id: 'chats' as Tab, icon: 'MessageCircle', label: 'Чаты' },
