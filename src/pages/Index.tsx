@@ -44,6 +44,31 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<Tab>('chats');
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
+
+  const handleSendMessage = () => {
+    if (!messageText.trim()) return;
+    
+    const now = new Date();
+    const time = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    const newMessage: Message = {
+      id: messages.length + 1,
+      text: messageText,
+      time: time,
+      isMine: true
+    };
+    
+    setMessages([...messages, newMessage]);
+    setMessageText('');
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
 
   const tabs = [
     { id: 'chats' as Tab, icon: 'MessageCircle', label: 'Чаты' },
@@ -271,7 +296,7 @@ const Index = () => {
 
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">
-              {mockMessages.map((msg, index) => (
+              {messages.map((msg, index) => (
                 <div
                   key={msg.id}
                   className={`flex ${msg.isMine ? 'justify-end' : 'justify-start'} animate-fade-in`}
@@ -304,9 +329,14 @@ const Index = () => {
                 placeholder="Сообщение..."
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="flex-1 bg-muted border-0"
               />
-              <Button size="icon" className="bg-gradient-to-r from-primary to-secondary">
+              <Button 
+                size="icon" 
+                className="bg-gradient-to-r from-primary to-secondary"
+                onClick={handleSendMessage}
+              >
                 <Icon name="Send" size={20} />
               </Button>
             </div>
